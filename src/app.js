@@ -1,11 +1,18 @@
-import { addTodo, toggleTodo, removeTodo, visibleTodos } from "./todo.js";
+import { addTodo, toggleTodo, removeTodo, visibleTodos, parseStoredTodos, serializeTodos, STORAGE_KEY } from "./todo.js";
 
-let todos = [];
+let todos = parseStoredTodos(localStorage.getItem(STORAGE_KEY));
 let filter = "all";
 
 const form = document.querySelector("#new-todo");
 const input = document.querySelector("#title");
 const list = document.querySelector("#list");
+
+// Every list change goes through here: store it, then render it.
+function commit(nextTodos) {
+  todos = nextTodos;
+  localStorage.setItem(STORAGE_KEY, serializeTodos(todos));
+  render();
+}
 
 function render() {
   list.replaceChildren(
@@ -14,13 +21,13 @@ function render() {
       const box = document.createElement("input");
       box.type = "checkbox";
       box.checked = t.done;
-      box.addEventListener("change", () => { todos = toggleTodo(todos, t.id); render(); });
+      box.addEventListener("change", () => commit(toggleTodo(todos, t.id)));
       const label = document.createElement("span");
       label.textContent = t.title;
       if (t.done) label.className = "done";
       const del = document.createElement("button");
       del.textContent = "Delete";
-      del.addEventListener("click", () => { todos = removeTodo(todos, t.id); render(); });
+      del.addEventListener("click", () => commit(removeTodo(todos, t.id)));
       li.append(box, label, del);
       return li;
     }),
@@ -32,9 +39,8 @@ function render() {
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  todos = addTodo(todos, input.value);
+  commit(addTodo(todos, input.value));
   input.value = "";
-  render();
 });
 
 for (const b of document.querySelectorAll("[data-filter]")) {
