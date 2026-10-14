@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Todo</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; max-width: 32rem; margin: 2rem auto; padding: 0 1rem; }
+    form { display: flex; gap: .5rem; }
+    input[type=text] { flex: 1; padding: .4rem; }
+    ul { list-style: none; padding: 0; }
+    li { display: flex; align-items: center; gap: .5rem; padding: .3rem 0; border-bottom: 1px solid #eee; }
+    li span { flex: 1; }
+    .done { text-decoration: line-through; color: #888; }
+    nav { display: flex; gap: .5rem; margin-top: 1rem; }
+    [aria-pressed=true] { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Todo</h1>
+  <form id="new-todo">
+    <input id="title" type="text" placeholder="What needs doing?" autocomplete="off">
+    <button type="submit">Add</button>
+  </form>
+  <ul id="list"></ul>
+  <nav>
+    <button data-filter="all">All</button>
+    <button data-filter="active">Active</button>
+    <button data-filter="done">Done</button>
+  </nav>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
